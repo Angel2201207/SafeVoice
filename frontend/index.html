@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeVoice — Anonymous Sexual Assault Incident Reporting</title>
+    <meta name="description" content="SafeVoice is a confidential, zero-personal-identity reporting portal for sexual assault survivors, routing cases directly to district police stations with unique tracking codes.">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Emergency & Quick Exit Bar -->
+    <header class="top-emergency-bar">
+        <div class="emergency-notice">
+            <span class="pulse-indicator"></span>
+            <strong>Immediate Danger?</strong> If you need emergency help right now, dial 
+            <a href="tel:112" class="emergency-link">112</a> / 
+            <a href="tel:1091" class="emergency-link">1091 (Women Helpline)</a>
+        </div>
+        <button id="quickExitBtn" class="btn-quick-exit" title="Quick Exit (Esc) - Leaves immediately to Google" aria-label="Quick Exit immediately">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                <line x1="12" y1="2" x2="12" y2="12"></line>
+            </svg>
+            <span>Quick Exit (Esc)</span>
+        </button>
+    </header>
+
+    <!-- Main Navigation Bar -->
+    <nav class="main-navbar">
+        <div class="nav-container">
+            <div class="brand" id="brandLogo">
+                <div class="brand-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        <path d="M9 12l2 2 4-4"></path>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title">SafeVoice</span>
+                    <span class="brand-tagline">Confidential Incident Intake</span>
+                </div>
+            </div>
+
+            <div class="nav-links" role="tablist">
+                <button class="nav-tab active" data-tab="report-tab" role="tab" aria-selected="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="12" y1="18" x2="12" y2="12"></line>
+                        <line x1="9" y1="15" x2="15" y2="15"></line>
+                    </svg>
+                    <span>Lodge Complaint</span>
+                </button>
+                <button class="nav-tab" data-tab="track-tab" role="tab" aria-selected="false">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <span>Track with Code</span>
+                </button>
+                <button class="nav-tab police-badge-tab" data-tab="police-tab" role="tab" aria-selected="false">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"></path>
+                        <circle cx="12" cy="11" r="3"></circle>
+                        <path d="M12 14v4"></path>
+                    </svg>
+                    <span>District Police Portal</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="content-container">
+
+        <!-- ================= PAGE 1: COMPLAINT REGISTERING ================= -->
+        <section id="report-view" class="view-panel active">
+            <div class="hero-intro">
+                <div class="security-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span>100% Anonymous & Secure</span>
+                </div>
+                <h1>Anonymous Incident Registration</h1>
+                <p class="hero-desc">
+                    Your safety and privacy are our highest priority. <strong>We do not ask for your name, phone number, email, or any personal identity details.</strong>
+                    Your complaint is forwarded directly to the police station of the respective district, and you will receive a <strong>Unique Case Code</strong> to follow up privately.
+                </p>
+            </div>
+
+            <div class="card form-card">
+                <form id="incidentForm" autocomplete="off" novalidate>
+                    
+                    <!-- Section A: Location Details -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <span class="step-num">1</span>
+                            <div>
+                                <h2>Location of Occurrence</h2>
+                                <p class="section-subtext">Where did the incident happen? This determines which district police station receives your case.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="incident_location">
+                                    Where did the problem occur? <span class="required">*</span>
+                                </label>
+                                <textarea 
+                                    id="incident_location" 
+                                    name="incident_location" 
+                                    rows="2" 
+                                    required 
+                                    placeholder="Describe the specific location, building, street, landmark, metro exit, vehicle, or area where the incident occurred..."
+                                ></textarea>
+                                <span class="field-hint">e.g. Near Bus Terminal 4, Main Market road opposite City Mall, inside parking lot, etc.</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="city">
+                                    City / Town Name <span class="required">*</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="city" 
+                                    name="city" 
+                                    required 
+                                    placeholder="e.g. Metro City, Bengaluru, New Delhi, Pune..."
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="district">
+                                    District Name <span class="required">*</span>
+                                </label>
+                                <div class="district-input-wrap">
+                                    <input 
+                                        type="text" 
+                                        id="district" 
+                                        name="district" 
+                                        required 
+                                        list="district-suggestions" 
+                                        placeholder="Type or select district..."
+                                    >
+                                    <datalist id="district-suggestions">
+                                        <option value="Central District">
+                                        <option value="North District">
+                                        <option value="South District">
+                                        <option value="East District">
+                                        <option value="West District">
+                                        <option value="South West District">
+                                        <option value="North East District">
+                                        <option value="Harbor District">
+                                        <option value="Suburban District">
+                                    </datalist>
+                                </div>
+                                <span class="field-hint">The case will be directly assigned to this district's police department.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section B: Date & Time -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <span class="step-num">2</span>
+                            <div>
+                                <h2>Incident Timing</h2>
+                                <p class="section-subtext">Specify the date and approximate time when the event took place.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="incident_date">
+                                    Incident Date <span class="required">*</span>
+                                </label>
+                                <input 
+                                    type="date" 
+                                    id="incident_date" 
+                                    name="incident_date" 
+                                    required
+                                >
+                                <div class="quick-chips">
+                                    <button type="button" class="chip-btn" data-date="today">Today</button>
+                                    <button type="button" class="chip-btn" data-date="yesterday">Yesterday</button>
+                                    <button type="button" class="chip-btn" data-date="2days">2 Days Ago</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="approx_time">
+                                    Approximate Time <span class="required">*</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="approx_time" 
+                                    name="approx_time" 
+                                    required 
+                                    placeholder="e.g. Around 9:30 PM, Late Night 2 AM, Evening..."
+                                >
+                                <div class="quick-chips">
+                                    <button type="button" class="chip-btn" data-time="Morning (06:00 - 12:00)">Morning</button>
+                                    <button type="button" class="chip-btn" data-time="Afternoon (12:00 - 17:00)">Afternoon</button>
+                                    <button type="button" class="chip-btn" data-time="Evening (17:00 - 21:00)">Evening</button>
+                                    <button type="button" class="chip-btn" data-time="Night (21:00 - 00:00)">Night</button>
+                                    <button type="button" class="chip-btn" data-time="Late Night (00:00 - 06:00)">Late Night</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section C: Register the Complaint -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <span class="step-num">3</span>
+                            <div>
+                                <h2>Register the Complaint</h2>
+                                <p class="section-subtext">Type and record the complaint statement in your own words.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="complaint_text">
+                                Complaint Statement / Describe the Incident <span class="required">*</span>
+                            </label>
+                            <textarea 
+                                id="complaint_text" 
+                                name="complaint_text" 
+                                rows="4" 
+                                required 
+                                placeholder="Register your complaint here. Describe what took place, the sequence of events, or the complaint you wish to lodge with the police station..."
+                            ></textarea>
+                            <span class="field-hint">This statement will be officially submitted as your anonymous incident report.</span>
+                        </div>
+                    </div>
+
+                    <!-- Section D: Extra Details Question -->
+                    <div class="form-section highlight-section">
+                        <div class="section-header">
+                            <span class="step-num">4</span>
+                            <div>
+                                <h2>Case Investigation Details</h2>
+                                <p class="section-subtext">The following key question helps the investigating officers take effective action.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="extra_details" class="special-label">
+                                <span class="label-star">★</span>
+                                Is there any extra details you can provide to help with the case?
+                            </label>
+                            
+                            <div class="guidance-banner">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                                <div>
+                                    <strong>Helpful details you may include if known:</strong>
+                                    Perpetrator's physical appearance (height, clothing, age, marks/tattoos), vehicle type/color/number fragment, direction they escaped, physical evidence left behind, presence of CCTV cameras, or witnesses nearby.
+                                </div>
+                            </div>
+
+                            <textarea 
+                                id="extra_details" 
+                                name="extra_details" 
+                                rows="5" 
+                                placeholder="Type any additional details, description of the perpetrator, clothing, vehicle details, landmarks, or anything else you remember here..."
+                            ></textarea>
+                            <span class="field-hint">Share only what you feel comfortable sharing. Every detail helps law enforcement reconstruct the incident.</span>
+                        </div>
+                    </div>
+
+                    <!-- Anonymity Confirmation & Submit -->
+                    <div class="form-footer">
+                        <div class="anonymity-guarantee">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                            <span>
+                                <strong>Strict No-PII Policy:</strong> No name, email, phone number, or IP address is tracked or saved with this report.
+                            </span>
+                        </div>
+
+                        <button type="submit" id="submitReportBtn" class="btn btn-primary btn-lg">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                            <span>Submit Complaint Anonymously</span>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 2: UNIQUE CASE CODE GENERATED ================= -->
+        <section id="code-success-view" class="view-panel">
+            <div class="success-card card">
+                <div class="success-icon-wrap">
+                    <div class="checkmark-circle">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="success-content">
+                    <span class="badge badge-success">Complaint Successfully Registered</span>
+                    <h2>Your Complaint Has Been Forwarded to the Police</h2>
+                    <p class="success-sub">
+                        Rather than addressing your personal details, your case has been assigned a confidential, unique tracking code.
+                    </p>
+
+                    <!-- The Unique Case Code Display -->
+                    <div class="code-box-container">
+                        <div class="code-box-label">Your Unique Confidential Case Code</div>
+                        <div class="code-box">
+                            <span id="generatedCaseCode" class="generated-code">SV-CEN-XXXXXX</span>
+                            <button id="copyCodeBtn" class="btn btn-secondary btn-copy" title="Copy Code to Clipboard">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                                <span id="copyBtnText">Copy Code</span>
+                            </button>
+                        </div>
+                        <p class="code-instruction">
+                            ⚠️ <strong>Important:</strong> Save or write down this code now. This is the <em>only</em> way to track progress or view police communications, ensuring your complete anonymity.
+                        </p>
+                    </div>
+
+                    <!-- Incident Summary Card -->
+                    <div class="summary-details-box">
+                        <h3>Report Summary Dispatched to Police Station</h3>
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <span class="summary-label">Assigned Police Station</span>
+                                <span id="summaryDistrict" class="summary-val">—</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">City</span>
+                                <span id="summaryCity" class="summary-val">—</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Incident Date</span>
+                                <span id="summaryDate" class="summary-val">—</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Approximate Time</span>
+                                <span id="summaryTime" class="summary-val">—</span>
+                            </div>
+                            <div class="summary-item full-span">
+                                <span class="summary-label">Incident Location</span>
+                                <span id="summaryLocation" class="summary-val">—</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="success-actions">
+                        <button id="downloadReceiptBtn" class="btn btn-outline">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <span>Download Private Text Token</span>
+                        </button>
+                        <button id="printReceiptBtn" class="btn btn-outline">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                <rect x="6" y="14" width="12" height="8"></rect>
+                            </svg>
+                            <span>Print Safe Summary</span>
+                        </button>
+                        <button id="trackNowBtn" class="btn btn-primary">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <span>View Police Case Status</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TRACK CASE STATUS VIEW ================= -->
+        <section id="track-view" class="view-panel">
+            <div class="track-header">
+                <h2>Check Case Progress</h2>
+                <p>Enter your confidential Unique Case Code to view status updates and police actions.</p>
+            </div>
+
+            <div class="card track-lookup-card">
+                <form id="trackForm" class="track-input-form">
+                    <div class="track-field-wrap">
+                        <label for="trackCodeInput" class="visually-hidden">Unique Case Code</label>
+                        <input 
+                            type="text" 
+                            id="trackCodeInput" 
+                            placeholder="Enter Code (e.g. SV-CEN-9X4K2P)" 
+                            required 
+                            autocomplete="off"
+                        >
+                        <button type="submit" class="btn btn-primary">
+                            <span>Check Status</span>
+                        </button>
+                    </div>
+                </form>
+
+                <div id="trackLoading" class="loading-state hidden">
+                    <div class="spinner"></div>
+                    <span>Querying district records...</span>
+                </div>
+
+                <div id="trackResultContainer" class="track-result-wrap hidden">
+                    <!-- Dynamic Case Details will populate here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= POLICE STATION PORTAL (BACKEND) ================= -->
+        <section id="police-view" class="view-panel">
+            <div class="police-portal-header">
+                <div class="portal-badge">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"></path>
+                    </svg>
+                    <span>Law Enforcement Case Management</span>
+                </div>
+                <h2>District Police Station Dashboard</h2>
+                <p>Select your jurisdiction to view cases lodged by survivors in your district.</p>
+            </div>
+
+            <!-- District Selection & Metrics -->
+            <div class="police-controls-bar card">
+                <div class="district-selector-group">
+                    <label for="policeDistrictFilter"><strong>Station Jurisdiction:</strong></label>
+                    <select id="policeDistrictFilter" class="form-select">
+                        <option value="all">All District Stations</option>
+                        <option value="Central District">Central District Police Station</option>
+                        <option value="North District">North District Police Station</option>
+                        <option value="South District">South District Police Station</option>
+                        <option value="East District">East District Police Station</option>
+                        <option value="West District">West District Police Station</option>
+                    </select>
+                </div>
+
+                <div class="search-filter-group">
+                    <input type="text" id="policeSearchInput" placeholder="Search by code, location, keyword...">
+                    <select id="policeStatusFilter" class="form-select">
+                        <option value="all">All Statuses</option>
+                        <option value="Registered">Registered</option>
+                        <option value="Under Assessment">Under Assessment</option>
+                        <option value="Active Investigation">Active Investigation</option>
+                        <option value="Evidence Secured">Evidence Secured</option>
+                        <option value="Resolved">Resolved</option>
+                    </select>
+                    <button id="refreshPoliceBtn" class="btn btn-secondary" title="Refresh cases">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Metrics Summary Cards -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <span class="metric-title">Total Cases</span>
+                    <span id="metricTotal" class="metric-val">0</span>
+                </div>
+                <div class="metric-card active-card">
+                    <span class="metric-title">Active Investigations</span>
+                    <span id="metricActive" class="metric-val">0</span>
+                </div>
+                <div class="metric-card urgent-card">
+                    <span class="metric-title">Newly Registered</span>
+                    <span id="metricNew" class="metric-val">0</span>
+                </div>
+                <div class="metric-card resolved-card">
+                    <span class="metric-title">Resolved / Filed</span>
+                    <span id="metricResolved" class="metric-val">0</span>
+                </div>
+            </div>
+
+            <!-- Cases Table -->
+            <div class="card table-card">
+                <div class="table-header-row">
+                    <h3>Registered District Incidents</h3>
+                    <span id="casesCountBadge" class="badge badge-neutral">0 cases</span>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="cases-table" id="policeCasesTable">
+                        <thead>
+                            <tr>
+                                <th>Case Code</th>
+                                <th>Incident Date & Time</th>
+                                <th>District / Station</th>
+                                <th>Location & City</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="policeCasesTbody">
+                            <tr>
+                                <td colspan="7" class="empty-state">Loading district cases...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Case Detail Modal for Police Station -->
+    <dialog id="caseDetailModal" class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <span class="badge badge-code" id="modalCaseCode">SV-XXX-XXXXXX</span>
+                    <h3 id="modalTitle">Incident Case Dossier</h3>
+                </div>
+                <button type="button" class="btn-close" id="closeModalBtn" aria-label="Close dialog">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Anonymous Protection Seal -->
+                <div class="anonymity-notice-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <div>
+                        <strong>Confidential Intake:</strong> No personal details of the survivor were collected. All official communication must be conducted via status updates linked to this Case Code.
+                    </div>
+                </div>
+
+                <div class="modal-info-grid">
+                    <div class="info-item">
+                        <span class="info-label">District Jurisdiction:</span>
+                        <span id="modalDistrict" class="info-val"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">City / Town:</span>
+                        <span id="modalCity" class="info-val"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Incident Date:</span>
+                        <span id="modalDate" class="info-val"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Approximate Time:</span>
+                        <span id="modalTime" class="info-val"></span>
+                    </div>
+                    <div class="info-item full">
+                        <span class="info-label">Where did the problem occur?</span>
+                        <p id="modalLocation" class="info-box"></p>
+                    </div>
+                    <div class="info-item full">
+                        <span class="info-label">Registered Complaint Statement:</span>
+                        <p id="modalComplaintText" class="info-box" style="white-space: pre-wrap; font-weight: 500;"></p>
+                    </div>
+                    <div class="info-item full">
+                        <span class="info-label">Extra details provided by survivor to help with the case:</span>
+                        <p id="modalExtraDetails" class="info-box highlight-box"></p>
+                    </div>
+                </div>
+
+                <!-- Case Timeline & Previous Communications -->
+                <div class="timeline-section">
+                    <h4>Case Timeline & Official Updates</h4>
+                    <div id="modalTimeline" class="timeline-flow">
+                        <!-- timeline items -->
+                    </div>
+                </div>
+
+                <!-- Police Station Update Form -->
+                <form id="policeUpdateForm" class="police-update-form">
+                    <h4>Update Investigation Status & Transmit Official Notice</h4>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="updateStatusSelect">Investigation Status:</label>
+                            <select id="updateStatusSelect" class="form-select" required>
+                                <option value="Registered">Registered</option>
+                                <option value="Under Assessment">Under Assessment</option>
+                                <option value="Active Investigation">Active Investigation</option>
+                                <option value="Evidence Secured">Evidence Secured</option>
+                                <option value="Resolved">Resolved / Case Closed</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="updatePrioritySelect">Priority Level:</label>
+                            <select id="updatePrioritySelect" class="form-select">
+                                <option value="Normal">Normal</option>
+                                <option value="Urgent">Urgent</option>
+                                <option value="Critical">Critical</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="updateOfficerName">Assigned Officer / Unit Badge ID:</label>
+                            <input type="text" id="updateOfficerName" placeholder="e.g. Sub-Inspector K. Verma, Cyber & Forensics Cell">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="updateOfficialNote">Official Message / Response to Anonymous Survivor:</label>
+                            <textarea id="updateOfficialNote" rows="3" placeholder="e.g. Investigating team has been dispatched to check nearby traffic CCTV. Patrol has been intensified in the area."></textarea>
+                            <span class="field-hint">This response will be visible to the survivor when they enter their Unique Case Code.</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="modalCancelBtn">Close</button>
+                        <button type="submit" class="btn btn-primary" id="saveStatusBtn">Transmit Status Update</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Footer Support Contacts -->
+    <footer class="app-footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <span class="brand-title">SafeVoice</span>
+                <p>A secure, trauma-informed emergency complaint intake system designed to empower survivors with absolute anonymity and direct police connectivity.</p>
+            </div>
+            <div class="footer-resources">
+                <h4>Confidential Helplines</h4>
+                <ul>
+                    <li>National Emergency: <strong>112</strong></li>
+                    <li>Women in Distress Helpline: <strong>1091</strong></li>
+                    <li>National Commission for Women: <strong>7827170170</strong></li>
+                    <li>Mental Health & Crisis Counseling: <strong>988 / 1800-599-0019</strong></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 SafeVoice Portal. Complete Anonymous Intake. No identifying logs kept.</span>
+        </div>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
